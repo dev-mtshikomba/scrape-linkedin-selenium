@@ -26,18 +26,24 @@ class Company(ResultsObject):
         banner = one_or_default(
             self.overview_soup, '.org-top-card')
 
+        # if company not found return None and exit function
+        if (banner == None):
+            return None
+
         # Main container with company overview info
         container = one_or_default(
             self.overview_soup, '.org-grid__core-rail--wide')
 
         overview = {}
+        # print('Print the banner here: {}'.format(banner))
         overview['description'] = container.select_one(
-            'section > p').get_text().strip()
+            'section > p').get_text().strip() if (container.select_one(
+            'section > p') != None ) else ''
 
         metadata_keys = container.select('.org-page-details__definition-term')
-        print(metadata_keys)
+        # print(metadata_keys)
         metadata_keys = [x for x in metadata_keys if "Company size" not in x.get_text()]
-        print(metadata_keys)
+        # print(metadata_keys)
         metadata_values = container.select(
             '.org-page-details__definition-text')
         overview.update(
@@ -50,7 +56,7 @@ class Company(ResultsObject):
             dict_val = val.get_text().strip()
             if "company_size" not in dict_key:
                 overview[dict_key] = dict_val
-        print(overview)
+        # print(overview)
 
         all_employees_links = all_or_default(
             banner, '.mt2 > a > span') # A fix to locate "See all ### employees on LinkedIn"

@@ -48,8 +48,9 @@ class CompanyScraper(Scraper):
         try:
             self.driver.find_element_by_css_selector('.organization-outlet')
         except:
-            raise ValueError(
-                'Company Unavailable: Company link does not match any companies on LinkedIn')
+            return None
+            # raise ValueError(
+            #     'Company Unavailable: Company link does not match any companies on LinkedIn')
 
     def get_overview(self):
         try:
